@@ -91,15 +91,16 @@
 | \$    | $또는 #프롬프트 모양    |
 
 - 예시
-  - `PS1='[\u\h \W]\$ `
-  
+    - `PS1='[\u\h \W]\$ `
+
 ### Redirection
+
 - Communication Channels
-![communcationChannels](communicationChannel.png)
+  ![communcationChannels](communicationChannel.png)
 
 - redirection
-  - 입력의 방향을 바꿔줌  
-  
+    - 입력의 방향을 바꿔줌
+
 | Communication Channels | Redirection | characters | 의 미                      |
 |------------------------|-------------|------------|--------------------------|
 | STDIN                  | 0<          | 0<<        | 입력을 키보드가 아닌 파일을 통해 받음    |
@@ -107,22 +108,23 @@
 | STDERR                 | 2>          | 2>>        | 표준 에러 출력을 터미널이 아닌 파일로 출력 |
 
 - `echo "asdff" > echo.txt  `
- 터미널이 아니라 echo.txt로 출력
+  터미널이 아니라 echo.txt로 출력
 
 ### Pipeline
+
 - 명령의 실행결과를 다음 명령의 입력으로 전달
 - 리눅스의 명령어를 조합하여 사용
-- 기호 : command1 | command2 | command 3  
-  
+- 기호 : command1 | command2 | command 3
+
   ![piepline](pipeline.png)
 
 - `ls | wc -l` 현재 파일 목록 -> 줄 계산 => 현재 디렉토리에 있는 파일의 수
 
-
 ## Bash Shell Script
 
 ### Shell Script?
-- 리눅스 command들을 모아 놓은 ASCII TEXT 파일  
+
+- 리눅스 command들을 모아 놓은 ASCII TEXT 파일
 - 실행 퍼미션을 할당해야 실행 가능
 - Bash shell script에서 특별히 의미가 정해진 기능  
   \# -> Comment(주석)
@@ -130,6 +132,7 @@
 - Sub shell -> 내부의 Shell을 새로 실행
 
 ## Positional Parameters
+
 - 위치 매개변수
 - 입력하는 argument들은 $0, $1, $2와 같은 변수에 저장되어 Script에 전달  
   name of shell script : $0  
@@ -147,48 +150,135 @@
 ## Input & Output
 
 ### echo
+
 - prints text to standard output  
   echo <옵션> <메시지>  
   -n 메시지 출력후 newline 문자를 추가하지 않는다.  
   -e backslash escapes 문자를 해석하여 특별한 의미를 지정한다.
-  - \t TAB키
-  - \n 줄바꿈
-  - \a alert(bell)  
+    - \t TAB키
+    - \n 줄바꿈
+    - \a alert(bell)
 
 
 - Example
-  - echo "Your time is up"
-  - echo "Your time is up" > time.txt
-  - echo -n "Name :"
-  - echo -e "First\tSecond"
+    - echo "Your time is up"
+    - echo "Your time is up" > time.txt
+    - echo -n "Name :"
+    - echo -e "First\tSecond"
 
 ### read
+
 - reads text from standard input  
-  read <옵션> 변수명  
+  read <옵션> 변수명
     - -n 지정한 문자수만큼 입력 받는다.
     - -t 지정된 시간안에 입력 받는다.
-    - -s silent mod로 입력하는 글자가 보이지 않는다.  
+    - -s silent mod로 입력하는 글자가 보이지 않는다.
 
 
 - read 명령에서 변수 명 생략 시 기본 reply 변수에 채워진다.
 
 
 - example
-  - read name
-  - read -t10 -n8 password
-  - read -t10 -n8 -s password
-  - read
-  - echo -n "Name : "; read name
-  - echo $name
+    - read name
+    - read -t10 -n8 password
+    - read -t10 -n8 -s password
+    - read
+    - echo -n "Name : "; read name
+    - echo $name
 
 ### printf
+
 - 서식 format에 맞춰서 출력    
   printf format <메시지>
-  - %d or %i 숫자
-  - %s 문자열
-  - %f 실수형 숫자  
+    - %d or %i 숫자
+    - %s 문자열
+    - %f 실수형 숫자
 
 
 - example
-  - printf "Hello linux shell\n"
-  - printf "Name: %s Age: %d" GUMBO 30
+    - printf "Hello linux shell\n"
+    - printf "Name: %s Age: %d" GUMBO 30
+
+## Branching
+
+### exit
+
+- 실행된 프로그램이 종료된 상태를 전달  
+  exit <숫자>  
+  $? 종료 코드 값
+    - 0 프로그램 또는 명령이 성공으로 종료했음을 의미
+    - 1-255 프로그램 또는 명령이 실패로 종료했음을 의미
+        - 1 일반 에러
+        - 2 syntax error
+        - 126 명령을 실행할 수 없음
+        - 127 명령(파일)이 존재하지 않음
+        - 128 + N 종료시그널 + N(kill -9 PID -> 128 + 9 -> 137 출력)
+
+
+- example
+    - cp file1
+    - echo $?
+    - sleep 100
+    - `<Ctrl><C>`
+    - echo %?
+
+### test
+
+- 비교 연산자
+    - test <명령어> or \[명령어]
+- 명령어 실행결과를 true(0) 또는 false(1)로 리턴한다.
+- test 명령어는 다양한 연산자를 지원한다.
+
+|연산자|설명|
+|-------|-----|
+|x -eq y| x값과 y값이 같으면 true를 리턴|
+|x -gt y| x값과 y값이 크면 true를 리턴|
+|x -ge y| x값과 y값보다 크거나 같으면 true를 리턴|
+|x -lt y| x값과 y값보다 작으면 true를 리턴|
+|x -le y| x값과 y값보다 작거나 같으면 true를 리턴|
+|x -ne y| x값과 y값이 같지 않으면 true를 리턴|
+|-e file| 파일이 존재하면 true를 리턴|
+|-d file| 파일이 존재하면 true를 리턴|
+|-f file| 파일이 존재하면 true를 리턴|
+|-x file| 파일이 디렉토리이면 true를 리턴|
+
+### if-then-fi
+
+![ifthenfi](ifthenfi.jpg)
+
+### case
+
+- $var의 값에 따라 선택해서 명령어를 실행  
+  case "$variable" in  
+  pattern1) command1;;  
+  pattern2) command2;;
+  *) command3 ;; esac
+
+
+- example echo -n "What do you want?"  
+  read answer  
+  case $answer in  
+  yes) echo "System restart.";;  
+  no) echo "shutdown the system";;  
+  *) echo "entered incoreectly";;  
+  esac
+
+
+## Looping
+
+### 산술 연산  expr, let
+- expr
+  - 정수형 산술연산(+,-,*,/,%), 논리연산(|,&), 관계연산(=,!=,>,>=,<,><=)  
+- let
+  - 정수형 산술연산, bit 연산 (<<,>>,&,|), 논리연산(&&,||), 단항연산(++,+=,-=)
+
+
+### while and until
+- 조건부 loop
+- while
+  - while 다음의 command가 성공하는 동안 do~done 사이의 명령어를 반복 실행
+- until
+  - until 다음의 command가 성공할때까지 do~done 사이의 명렁어를 반복 실행
+
+### for-Loop
+- 주어진 list만큼 do ~ done 사이의 명렁어를 반복 실행
